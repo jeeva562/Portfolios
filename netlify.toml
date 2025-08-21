@@ -1,0 +1,10 @@
+[[headers]]
+for = "/*"
+  [headers.values]
+  Access-Control-Allow-Origin = "*"
+[build]
+  command = "npm run build:css"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "18"
