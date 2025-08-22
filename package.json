@@ -23,7 +23,7 @@
     "live-server": "^1.2.2",
     "parse-sel": "^1.0.0",
     "postcss": "^8.5.6",
-    "nodemon": "^3.3.2",
+    "nodemon": "^3.1.10",
     "tailwindcss": "^3.4.17"
   },
   "author": "jeeva562",
