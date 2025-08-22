@@ -2,7 +2,8 @@
   "name": "jeevag-portfolio",
   "version": "1.0.0",
   "description": "A modern, interactive portfolio featuring **3D animations**, **glassmorphism UI**, and **mini-games**.   Built to showcase my skills, projects, and creativity in web development.",
-  "main": "index.html",
+  "main": "server.js",
+  "type": "module",
   "dependencies": {
     "node-fetch": "^3.3.2",
     "three": "^0.160.0"
@@ -26,10 +27,10 @@
     "live-server": "^1.2.2",
     "parse-sel": "^1.0.0",
     "postcss": "^8.5.6",
+    "nodemon": "^3.3.2",
     "tailwindcss": "^3.4.17"
   },
   "keywords": [],
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/jeeva562/Portfolios/issues"
   },

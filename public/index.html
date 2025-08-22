@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="manifest" href="/favicon/site.webmanifest">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://jeevag-portfolio.netlify.app/">
+    <meta property="og:url" content=" ">
     <meta property="og:title" content="jeevag-portfolio">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -61,60 +61,62 @@
 
     
     <!-- Navigation with Mobile Support -->
-        <nav class="fixed top-0 left-0 w-full z-50 backdrop-blur-lg bg-white/10 border-b border-white/20">
-        <div class="max-w-7xl mx-auto px-4 py-4 md:px-6">
-            <div class="flex justify-between items-center">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <span class="text-2xl font-bold gradient-text hover-scale cursor-pointer">JG</span>
-                </div>
+       <nav class="fixed top-0 left-0 w-full z-50 backdrop-blur-lg bg-white/10 border-b border-white/20">
+  <div class="max-w-7xl mx-auto px-4 py-4 md:px-6">
+    <div class="flex justify-between items-center">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <span class="text-2xl font-bold gradient-text hover-scale cursor-pointer">JG</span>
+      </div>
 
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#home" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Home</a>
-                    <a href="#about" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">About</a>
-                    <a href="#skills" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Skills</a>
-                    <a href="#projects" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Projects</a>
-                    <a href="#playground" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Playground</a>
-                    <a href="#contact" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:scale-105">Contact</a>
-                </div>
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#home" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Home</a>
+        <a href="#about" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">About</a>
+        <a href="#skills" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Skills</a>
+        <a href="#projects" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Projects</a>
+        <a href="#playground" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Playground</a>
+        <a href="#contact" class="px-5 py-2 bg-gradient-to-r from-blue-400 via-cyan-400 to-pink-500 text-white rounded-full font-medium shadow-[0_0_20px_rgba(34,211,238,0.8)] hover:shadow-[0_0_30px_rgba(236,72,153,0.9)] transition-all duration-300 hover:scale-110">
+           Contact</a>
+      </div>
 
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="menu-toggle" class="text-gray-300 hover:text-white transition-all duration-300" aria-label="Open menu">
-                        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Mobile Menu Overlay -->
-    <div class="menu-overlay" id="menu-overlay"></div>
-
-    <!-- Mobile Menu - Fixed with proper styling -->
-    <div id="mobile-menu">
-        <!-- Close Button -->
-        <button id="close-menu">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden flex items-center">
+        <button id="menu-toggle" class="text-gray-300 hover:text-white transition-all duration-300" aria-label="Open menu">
+          <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
         </button>
-
-        <!-- Mobile Links -->
-        <a href="#home" class="mobile-nav-item">Home</a>
-        <a href="#about" class="mobile-nav-item">About</a>
-        <a href="#skills" class="mobile-nav-item">Skills</a>
-        <a href="#projects" class="mobile-nav-item">Projects</a>
-        <a href="#playground" class="mobile-nav-item">Playground</a>
-        <a href="#contact" class="mobile-nav-item bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-center mt-4">Contact</a>
+      </div>
     </div>
+  </div>
+</nav>
 
+<!-- Mobile Menu Overlay -->
+<div class="menu-overlay" id="menu-overlay"></div>
 
+<!-- Mobile Menu -->
+<div id="mobile-menu">
+  <!-- Close Button -->
+  <button id="close-menu">
+    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+
+  <!-- Mobile Links -->
+  <div class="flex flex-col items-center justify-center h-full space-y-6">
+    <a href="#home" class="mobile-nav-item">Home</a>
+    <a href="#about" class="mobile-nav-item">About</a>
+    <a href="#skills" class="mobile-nav-item">Skills</a>
+    <a href="#projects" class="mobile-nav-item">Projects</a>
+    <a href="#playground" class="mobile-nav-item">Playground</a>
+     <a href="#contact" class="px-5 py-2 bg-gradient-to-r from-green-400 via-blue-400 to-pink-500 text-white rounded-full font-medium shadow-[0_0_20px_rgba(34,211,238,0.8)] hover:shadow-[0_0_30px_rgba(236,72,153,0.9)] transition-all duration-300 hover:scale-110">
+           Contact</a>
+  </div>
+</div>
 
         <!-- Hero Section -->
 <section id="home" aria-labelledby="hero-heading" class="min-h-screen flex items-center justify-center relative overflow-hidden bg-gray-900 px-4 sm:px-6 pt-24 pb-32 isolate">
@@ -671,67 +673,40 @@ class _TempleViewScreenState extends State<TempleViewScreen> {
     </section>
 
      <!-- Playground Section --->
-     <section id="playground" class="min-h-screen flex flex-col items-center justify-center p-4">
-    <div class="glass-card max-w-4xl w-full p-4 sm:p-6 md:p-8 rounded-lg text-center">
-        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-4 sm:mb-6 md:mb-8">Playground ✨</h2>
-        <p class="text-base sm:text-lg text-gray-300 mb-4 sm:mb-6 px-2">
-            Let's have some fun! Use this playground.
-        </p>
-        <div class="w-full max-w-2xl mx-auto">
-            <!-- Prompt input container -->
-            <div class="prompt-container flex items-stretch mb-4 rounded-lg">
-                <label for="file-input" class="p-2 sm:p-3 cursor-pointer text-gray-400 icon-button flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
-                    </svg>
-                </label>
-                <input type="file" id="file-input" accept="image/*" class="hidden">
-                
-                <textarea 
-                    id="prompt-input" 
-                    class="flex-grow p-2 sm:p-3 bg-transparent text-white placeholder-gray-500 focus:outline-none overflow-y-auto prompt-textarea resize-none"
-                    placeholder="Type a prompt here..."
-                    rows="1"
-                ></textarea>
-                
-                <button id="send-button" class="p-2 sm:p-3 cursor-pointer text-gray-400 icon-button flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M2.01 21L23 12 2.01 3v6l15 3-15 3z"/>
-                    </svg>
-                </button>
-            </div>
-            
-            <!-- Image preview section -->
-            <div id="image-preview" class="mb-4 hidden">
-                <div class="inline-block bg-gray-800 rounded-lg p-3 border border-gray-600">
-                    <img id="preview-image" src="" alt="Image preview" class="max-w-full h-auto max-h-32 sm:max-h-48 rounded-lg mx-auto block">
-                    <button id="clear-image" class="mt-2 text-xs sm:text-sm text-red-400 hover:text-red-500 transition-colors duration-200 block mx-auto">
-                        Remove Image
-                    </button>
-                </div>
-            </div>
+<section id="playground" class="min-h-screen flex flex-col items-center justify-center  text-white px-6 py-16">
+  <!-- Title -->
+  <h2 class="text-4xl md:text-5xl font-extrabold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+    AI Playground 🤖
+  </h2>
+  <p class="text-lg text-gray-300 mb-10 max-w-2xl text-center">
+    Type a prompt and watch the AI bring your imagination to life with glowing, futuristic effects.
+  </p>
 
-            <!-- Loading indicator with centered Pikachu -->
-            <div id="loading-indicator" class="hidden mt-4">
-                <div class="loading-container">
-                    <img src="/Assets/pikachu.gif" alt="Loading..." class="pikachu-loader">
-                    <p class="loading-text">Generating response...</p>
-                </div>
-            </div>
-            
-            <!-- Result box -->
-    <div id="result-box" class="hidden result-box p-4 sm:p-6 mt-4 text-left border border-gray-700 rounded-lg relative">
-    <button class="close-button" aria-label="Close result" onclick="closeResultBox()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-        </svg>
+  <!-- Input + Button -->
+  <div class="w-full max-w-xl flex flex-col md:flex-row items-center gap-4">
+    <input
+      id="userPrompt"
+      type="text"
+      placeholder="✨ Example: A galaxy of neon jellyfish"
+      class="flex-1 px-4 py-3 rounded-xl bg-gray-800 text-white border border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none transition"
+    />
+    <button
+      id="generateBtn"
+      class="px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:scale-105 transition text-white font-semibold shadow-lg"
+    >
+      Generate
     </button>
-    <div id="result-content" class="text-gray-200 text-sm sm:text-base"></div>
-   </div>
-        </div>
-    </div>
-</section>
+  </div>
 
+  <!-- Pikachu Loading GIF -->
+  <div class="flex flex-col items-center mt-6">
+    <img id="placeholderGif" src="" alt="Loading..." class="hidden w-24 h-24 object-contain" />
+    <p id="loadingText" class="hidden text-gray-400 mt-3">⚡ Generating...</p>
+  </div>
+
+  <!-- Output Area -->
+  <div id="outputArea" class="mt-10 w-full max-w-2xl text-center"></div>
+</section>
 
 
     <!-- Contact Section -->
@@ -910,7 +885,7 @@ class _TempleViewScreenState extends State<TempleViewScreen> {
 
         <script src="globe.js"></script>
         <script  type="module" src="app.js"></script>
-        <script  type="module" src="config.js"></script>
+        
         
        <script id="dhws-dataInjector" src="/public/dhws-data-injector.js"></script>
 

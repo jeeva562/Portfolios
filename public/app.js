@@ -1,4 +1,4 @@
- import config from './config.js';
+ let scene, camera, renderer, currentAnimation;
  
  // FIXED: Initialize particles.js
 
@@ -478,349 +478,70 @@
 
         
         // --- API Logic ---
-const TEXT_API_URL = "/api/openai";
-const HF_MODELS = [,
-    "runwayml/stable-diffusion-v1-5",
-    "CompVis/stable-diffusion-v1-4"
-];
+const input = document.getElementById("userPrompt");
+const button = document.getElementById("generateBtn");
+const gif = document.getElementById("placeholderGif");
+const loadingText = document.getElementById("loadingText");
+const outputArea = document.getElementById("outputArea");
 
-const promptInput = document.getElementById('prompt-input');
-const sendButton = document.getElementById('send-button');
-const loadingIndicator = document.getElementById('loading-indicator');
-const resultBox = document.getElementById('result-box');
-const resultContent = document.getElementById('result-content');
-const fileInput = document.getElementById('file-input');
-const imagePreview = document.getElementById('image-preview');
-const imagePreviewImg = document.getElementById('preview-image');
-const clearImageButton = document.getElementById('clear-image');
+// Use your Render-hosted backend
+const API_BASE = "https://portfolios-xfpr.onrender.com/";
 
-// Encode image as Base64
-const base64EncodeImage = (file) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
-    });
-};
-
-// Enhanced fetch with comprehensive error handling
-const fetchWithRetry = async (url, options, retries = 3) => {
-    let lastError;
-    let delay = 1000;
-    
-    for (let i = 0; i < retries; i++) {
-        try {
-            console.log(`Attempting request to: ${url} (attempt ${i + 1})`);
-            
-            const response = await fetch(url, options);
-            
-            // Handle rate limiting
-            if (response.status === 429) {
-                console.warn(`Rate limited. Retry ${i+1}/${retries}`);
-                await new Promise(res => setTimeout(res, delay));
-                delay *= 2;
-                continue;
-            }
-            
-            // Handle server errors
-            if (response.status >= 500) {
-                throw new Error(`Server error: ${response.status} ${response.statusText}`);
-            }
-            
-            // Handle client errors (but don't retry)
-            if (response.status >= 400) {
-                const contentType = response.headers.get('content-type');
-                let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-                
-                try {
-                    if (contentType && contentType.includes('application/json')) {
-                        const errorData = await response.json();
-                        errorMessage = errorData.error || errorData.message || errorMessage;
-                    } else {
-                        const text = await response.text();
-                        errorMessage = text || errorMessage;
-                    }
-                } catch (parseError) {
-                    console.warn('Could not parse error response');
-                }
-                
-                throw new Error(errorMessage);
-            }
-            
-            return response;
-            
-        } catch (error) {
-            lastError = error;
-            console.error(`Request failed (attempt ${i + 1}):`, error.message);
-            
-            // Don't retry for certain errors
-            if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-                throw new Error('Network error: Unable to connect to the API.');
-            }
-            
-            if (i === retries - 1) break;
-            
-            await new Promise(res => setTimeout(res, delay));
-            delay *= 2;
-        }
-    }
-    
-    throw lastError;
-};
-
-// Handle send button
-const handleSendPrompt = async () => {
-    const prompt = promptInput.value.trim();
-    const imageFile = fileInput.files[0];
-
-    if (!prompt && !imageFile) return;
-
-    resultBox.classList.add('hidden');
-    resultContent.innerHTML = '';
-    loadingIndicator.classList.remove('hidden');
-    sendButton.disabled = true;
-
-    try {
-        const isImageGen = prompt.toLowerCase().includes('draw') || 
-                           prompt.toLowerCase().includes('sketch') || 
-                           prompt.toLowerCase().includes('generate image') ||
-                           prompt.toLowerCase().includes('create image') ||
-                           prompt.toLowerCase().includes('make image');
-
-        if (isImageGen) {
-            await handleImageGenerationWithHF(prompt);
-        } else if (imageFile) {
-            await handleImageAnalysis(prompt, imageFile);
-        } else {
-            await handleTextGeneration(prompt);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        displayError(error.message);
-    } finally {
-        loadingIndicator.classList.add('hidden');
-        sendButton.disabled = false;
-        clearImage();
-        promptInput.value = '';
-    }
-};
-
-// Enhanced error display function
-const displayError = (errorMessage) => {
-    const isNetworkError = errorMessage.toLowerCase().includes('network') || 
-                       errorMessage.toLowerCase().includes('failed to fetch');
-    
-    let troubleshootingTips = `
-        <div class="error-container">
-            <p class="text-red-400 mb-3"><strong>Error:</strong> ${errorMessage}</p>
-            <div class="troubleshooting-tips">
-                <p class="text-yellow-400 text-sm mb-2"><strong>Troubleshooting Tips:</strong></p>
-                <ul class="text-sm text-gray-300 list-disc ml-4 space-y-1">
-    `;
-    
-    if (isNetworkError) {
-        troubleshootingTips += `
-                    <li>Check your internet connection</li>
-                    <li>Make sure the server is running</li>
-                    <li>Check browser console for more details</li>
-        `;
-    } else {
-        troubleshootingTips += `
-                    <li>Check if your API key is valid</li>
-                    <li>The model might be overloaded, try again in a few minutes</li>
-                    <li>Try a simpler prompt</li>
-                    <li>Check your internet connection</li>
-        `;
-    }
-    
-    troubleshootingTips += `
-                </ul>
-            </div>
-        </div>
-    `;
-    
-    resultContent.innerHTML = troubleshootingTips;
-    resultBox.classList.remove('hidden');
-};
-
-// Text generation with OpenAI
-const handleTextGeneration = async (prompt) => {
-    const payload = {
-        model: "gpt-3.5-turbo", // Using a valid model name
-        messages: [
-            { role: "system", content: "You are a helpful assistant." },
-            { role: "user", content: prompt }
-        ]
-    };
-
-    const response = await fetchWithRetry(TEXT_API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    });
-
-    const result = await response.json();
-    if (result.choices?.length) {
-        const text = result.choices[0].message.content;
-        resultContent.innerHTML = `<pre class="whitespace-pre-wrap text-left p-4 bg-gray-800 rounded-lg">${text}</pre>`;
-    } else {
-        resultContent.textContent = "No response received. Please try again.";
-    }
-    resultBox.classList.remove('hidden');
-};
-
-// Image analysis with OpenAI
-const handleImageAnalysis = async (prompt, imageFile) => {
-    const base64ImageData = await base64EncodeImage(imageFile);
-    const payload = {
-        model: "gpt-4-vision-preview", // Using vision model
-        messages: [
-            {
-                role: "user",
-                content: [
-                    { type: "text", text: prompt },
-                    { 
-                        type: "image_url", 
-                        image_url: { 
-                            url: `data:${imageFile.type};base64,${base64ImageData}` 
-                        } 
-                    }
-                ]
-            }
-        ],
-        max_tokens: 1000
-    };
-
-    const response = await fetchWithRetry(TEXT_API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    });
-
-    const result = await response.json();
-    if (result.choices?.length) {
-        const text = result.choices[0].message.content;
-        resultContent.innerHTML = `<div class="p-4 bg-gray-800 rounded-lg">${text}</div>`;
-    } else {
-        resultContent.textContent = "Could not analyze the image. Please try again.";
-    }
-    resultBox.classList.remove('hidden');
-};
-
-// Hugging Face image generation with multiple fallbacks
-const handleImageGenerationWithHF = async (prompt) => {
-    resultContent.innerHTML = `
-        <div class="text-center">
-            <p class="text-yellow-400 mb-2">🎨 Generating image...</p>
-            <p class="text-sm text-gray-400">This may take 20-40 seconds</p>
-        </div>
-    `;
-    resultBox.classList.remove('hidden');
-
-    let lastError;
-    
-    for (let i = 0; i < HF_MODELS.length; i++) {
-        const model = HF_MODELS[i];
-        
-        try {
-            resultContent.innerHTML = `
-                <div class="text-center">
-                    <p class="text-yellow-400 mb-2">🎨 Trying model: ${model.split('/')[1]}</p>
-                    <p class="text-sm text-gray-400">Attempt ${i + 1} of ${HF_MODELS.length}</p>
-                </div>
-            `;
-
-            const response = await fetch('/api/huggingface', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    model: model,
-                    inputs: prompt,
-                    parameters: {
-                        num_inference_steps: 25,
-                        guidance_scale: 7.5
-                    },
-                    options: {
-                        wait_for_model: true,
-                        use_cache: false
-                    }
-                })
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(`Model ${model} failed: ${error.error || error.message || 'Unknown error'}`);
-            }
-
-            const blob = await response.blob();
-            const imageUrl = URL.createObjectURL(blob);
-
-            resultContent.innerHTML = `
-                <div class="text-center">
-                    <p class="text-green-400 mb-3">✅ Generated with ${model.split('/')[1]}</p>
-                    <img src="${imageUrl}" alt="Generated Image" 
-                         class="rounded-lg shadow-lg mx-auto max-w-full border border-gray-500"
-                         onload="this.style.opacity=1" style="opacity:0;transition:opacity 0.3s">
-                    <p class="text-xs text-gray-500 mt-2">Prompt: "${prompt}"</p>
-                </div>
-            `;
-            
-            return;
-            
-        } catch (error) {
-            console.error(`Model ${model} failed:`, error);
-            lastError = error;
-            
-            if (i < HF_MODELS.length - 1) {
-                await new Promise(res => setTimeout(res, 3000));
-                continue;
-            }
-        }
-    }
-    
-    throw new Error(`All models failed. Last error: ${lastError.message}`);
-};
-
-
-// Event listeners
-sendButton.addEventListener('click', handleSendPrompt);
-promptInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleSendPrompt();
-    }
-});
-
-fileInput.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imagePreviewImg.src = e.target.result;
-            imagePreview.classList.remove('hidden');
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
-clearImageButton.addEventListener('click', clearImage);
-
-function clearImage() {
-    imagePreview.classList.add('hidden');
-    imagePreviewImg.src = '';
-    fileInput.value = '';
+function resetUI() {
+  gif.classList.add("hidden");
+  loadingText.classList.add("hidden");
 }
-// Initialize the app
-console.log('🚀 AI Playground initialized');
 
+button.addEventListener("click", async () => {
+  const prompt = input.value.trim();
+  if (!prompt) return;
 
+  // Reset output
+  outputArea.innerHTML = "";
+
+  // Show Pikachu + loading
+  gif.src = "/public/pikachu.gif"; 
+  gif.classList.remove("hidden");
+  loadingText.textContent = "⚡ Generating...";
+  loadingText.classList.remove("hidden");
+
+  try {
+    const response = await fetch(`${API_BASE}/api/generate-effect`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt, type: "image" }),
+    });
+
+    if (!response.ok) throw new Error(`Server error: ${response.status}`);
+
+    const data = await response.json();
+
+    resetUI();
+
+    if (data.type === "text" && data.result) {
+      const p = document.createElement("p");
+      p.textContent = data.result;
+      p.className = "text-lg text-green-400 mt-4";
+      outputArea.appendChild(p);
+    } else if (data.type === "image" && data.image) {
+      const img = document.createElement("img");
+      img.src = data.image;
+      img.alt = "AI Generated Visual";
+      img.className = "max-h-[300px] rounded-lg shadow-lg mt-4";
+      outputArea.appendChild(img);
+    } else {
+      throw new Error("Invalid AI response");
+    }
+  } catch (err) {
+    console.error("❌ Generation failed:", err);
+    resetUI();
+
+    const p = document.createElement("p");
+    p.textContent = "⚠️ Failed to generate. Try again.";
+    p.className = "text-red-400 mt-4";
+    outputArea.appendChild(p);
+  }
+});
 
         // FIXED: Contact Form with Proper Error Handling
     const contactForm = document.getElementById('contact-form');

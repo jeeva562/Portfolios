@@ -1,93 +1,97 @@
-
 // server.js
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import fetch from "node-fetch";
 
-require('dotenv').config();
-const express = require('express');
-const fetch = require('node-fetch');
-const cors = require('cors');
+dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-
-// Allow requests from your frontend origin
-app.use(cors({
-  origin: process.env.FRONTEND_ORIGIN || '*'
-}));
-
-// Parse JSON bodies
+// Enable JSON parsing
 app.use(express.json());
 
+// Enable CORS (important for frontend ↔ backend communication)
+app.use(
+  cors({
+    origin: "*", 
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 
-app.use(cors({
-  origin: process.env.FRONTEND_ORIGIN || '*'
-}));
-app.use(express.json());
-
-// ✅ Endpoint to fetch API keys from .env (only for frontend use)
-app.get('/api/get-key', (req, res) => {
-  const { type } = req.query;
-  
-  if (type === 'openai') {
-    return res.json({ key: process.env.OPENAI_API_KEY || '' });
-  }
-  if (type === 'huggingface') {
-    return res.json({ key: process.env.HUGGINGFACE_API_KEY || '' });
-  }
-  
-  res.status(400).json({ error: 'Invalid key type' });
-});
-
-// 🔹 OpenAI Proxy
-app.post('/api/openai', async (req, res) => {
+// ===== API ROUTE =====
+app.post("/api/generate-effect", async (req, res) => {
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify(req.body)
-    });
+    const { prompt, type } = req.body;
 
-    if (!response.ok) {
-
-      const errorText = await response.text();
-      return res.status(response.status).json({ error: errorText });
+    if (!prompt) {
+      return res.status(400).json({ error: "Prompt is required" });
     }
 
-    const data = await response.json();
-    res.json(data);
-    } catch (err) {
-    console.error('OpenAI proxy error:', err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+    
+    if (type === "image") {
+    
+      const response = await fetch(
+        "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ inputs: prompt }),
+        }
+      );
 
+      if (!response.ok) {
+        throw new Error(`HuggingFace API failed: ${response.status}`);
+      }
 
-// 🔹 Hugging Face Proxy
-app.post('/api/huggingface', async (req, res) => {
-  try {
-    const response = await fetch(`https://api-inference.huggingface.co/models/${req.body.model}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(req.body.input)
-    });
+      const buffer = await response.arrayBuffer();
+      const base64Image = Buffer.from(buffer).toString("base64");
 
-    if (!response.ok) {
-      return res.status(response.status).json({ error: await response.text() });
+      return res.json({
+        type: "image",
+        image: `data:image/png;base64,${base64Image}`,
+      });
+    } else {
+      // OpenAI for text effects
+      const response = await fetch("https://api.openai.com/v1/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "text-davinci-003",
+          prompt: `Create a fun futuristic visual effect idea for: ${prompt}`,
+          max_tokens: 100,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenAI API failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      return res.json({
+        type: "text",
+        result: data.choices?.[0]?.text?.trim() || "No response",
+      });
     }
-
-    res.json(await response.json());
   } catch (err) {
-    console.error('Hugging Face proxy error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("❌ API error:", err);
+    return res.status(500).json({ error: "Failed to generate effect" });
   }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`🚀 Server listening on port ${port}`);
+// ===== DEPLOYMENT: serve frontend (optional) =====
+app.use(express.static("public")); // your frontend files go inside /public
+
+// ===== START SERVER =====
+app.listen(PORT, () => {
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
