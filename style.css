@@ -334,30 +334,58 @@ body {
     box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    padding: 20px;
   }
+
 
   #mobile-menu.show {
     right: 0;
   }
 
-  .mobile-nav-item {
+.mobile-nav-item {
+    position: relative; /* Needed for pseudo-element */
     display: block;
     padding: 12px 20px;
     color: white;
     font-size: 18px;
     text-decoration: none;
     border-left: 4px solid transparent;
+    opacity: 0;
+    transform: translateX(20px);
     transition: all 0.3s ease;
-    text-align: center;
-  }
+    text-align: left;
+    width: 100%;
+}
 
-  .mobile-nav-item:hover {
-    border-left-color: #8B5CF6;
-    background: rgba(255, 255, 255, 0.05);
-    transform: translateX(5px);
-  }
+
+.mobile-nav-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(139, 92, 246, 0.3), rgba(139, 92, 246, 0));
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none; 
+}
+
+.mobile-nav-item:hover::before {
+    opacity: 1; 
+}
+
+.mobile-nav-item:hover {
+    border-left-color: #8B5CF6;                  
+    background: rgba(139, 92, 246, 0.1);        
+    transform: translateX(12px) scale(1.05);    
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2); 
+    transition: all 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
 
   .menu-overlay {
     position: fixed;

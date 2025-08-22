@@ -123,57 +123,74 @@
         }
 
         // FIXED: Enhanced Mobile Menu Toggle
-      document.addEventListener('DOMContentLoaded', function() {
-            const menuToggle = document.getElementById('menu-toggle');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const closeMenu = document.getElementById('close-menu');
-            const menuOverlay = document.getElementById('menu-overlay');
-            const navItems = document.querySelectorAll('.mobile-nav-item');
+   document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    const menuOverlay = document.getElementById('menu-overlay');
+    const navItems = document.querySelectorAll('.mobile-nav-item');
 
-            function showMobileMenu() {
-                mobileMenu.classList.add('show');
-                menuOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
+    function showMobileMenu() {
+        mobileMenu.classList.add('show');
+        menuOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Animate nav items with stagger
+        navItems.forEach((item, index) => {
+            item.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+            setTimeout(() => {
+                item.style.opacity = "1";
+                item.style.transform = "translateX(0)";
+            }, index * 100);
+        });
+    }
+
+    function hideMobileMenu() {
+        mobileMenu.classList.remove('show');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+
+        // Reset nav items for next open
+        navItems.forEach(item => {
+            item.style.opacity = "0";
+            item.style.transform = "translateX(20px)";
+            item.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+        });
+    }
+
+    menuToggle.addEventListener('click', showMobileMenu);
+    closeMenu.addEventListener('click', hideMobileMenu);
+    menuOverlay.addEventListener('click', hideMobileMenu);
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
+
+            if (mobileMenu.classList.contains('show')) {
+                hideMobileMenu();
             }
 
-            function hideMobileMenu() {
-                mobileMenu.classList.remove('show');
-                menuOverlay.classList.remove('active');
-                document.body.style.overflow = 'auto';
-                
-                // Reset animation states
-                navItems.forEach(item => {
-                    item.style.opacity = "0";
-                    item.style.transform = "translateX(20px)";
+            if (target) {
+              const offsetTop = target.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
                 });
             }
+        });
+    });
 
-            menuToggle.addEventListener('click', showMobileMenu);
-            closeMenu.addEventListener('click', hideMobileMenu);
-            menuOverlay.addEventListener('click', hideMobileMenu);
-            
-            // Smooth Scroll
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const target = document.querySelector(targetId);
-                    
-                    // Close mobile menu if open
-                    if (mobileMenu.classList.contains('show')) {
-                        hideMobileMenu();
-                    }
-                    
-                    if (target) {
-                        const offsetTop = target.offsetTop - 80;
-                        window.scrollTo({
-                            top: offsetTop,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        });  // FIXED: Animate elements on scroll
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768 && mobileMenu.classList.contains('show')) {
+            hideMobileMenu();
+        }
+    });
+});
+
+            // FIXED: Animate elements on scroll
         const animateOnScroll = () => {
             const elements = document.querySelectorAll('.skill-bar, .glass-card, .code-line');
             
