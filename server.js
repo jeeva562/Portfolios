@@ -3,6 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import fetch from "node-fetch";
+import path from "path";
 
 dotenv.config();
 
@@ -89,7 +90,7 @@ app.post("/api/generate-effect", async (req, res) => {
 });
 
 // ===== DEPLOYMENT: serve frontend (optional) =====
-app.use(express.static("public")); // your frontend files go inside /public
+app.use(express.static(path.join(process.cwd(), "public")));
 
 // ===== START SERVER =====
 app.listen(PORT, () => {
