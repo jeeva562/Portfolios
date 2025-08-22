@@ -3,6 +3,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import fetch from "node-fetch";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -19,8 +23,8 @@ app.use(cors({
   allowedHeaders: ["Content-Type"]
 }));
 
-// Serve frontend
-app.use(express.static(path.join(process.cwd(), "public")));
+
+
 
 // API Route
 app.post("/api/generate-effect", async (req, res) => {
@@ -79,6 +83,11 @@ app.post("/api/generate-effect", async (req, res) => {
 // Optional: SPA fallback
 app.get("*", (req, res) => {
   res.sendFile(path.join(process.cwd(), "public", "index.html"));
+});
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // Start server

@@ -8,7 +8,7 @@
     "start": "node server.js",
     "build:css": "npx @dhiwise/component-tagger && npx tailwindcss -i ./src/tailwind.css -o ./dist/tailwind.css",
     "watch:css": "npx @dhiwise/component-tagger && npx tailwindcss -i ./src/tailwind.css -o ./dist/tailwind.css --watch",
-    "dev": "npm run watch:css"
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
