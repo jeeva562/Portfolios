@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+ <html lang="en"> 
+  <head> <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="description" content="Jeeva G's Portfolio: Flutter & Web Developer, UI/UX Designer. Explore animated backgrounds, interactive coding games, stunning project showcases, and seamless mobile-friendly design built with Three.js and Tailwind CSS. Get in touch for collaborations or hiring!">
+     <meta name="robots" content="index, follow"> 
+     <!-- <link rel="canonical" href="https://jeevag-portfolio.netlify.app/"> --> 
+      <meta name="apple-mobile-web-app-status-bar" content="#202125"> 
+      <title>Jeeva G | Portfolio</title>
+       <link rel="stylesheet" href="/src/css/style.css">
+        <link rel="stylesheet" href="/src/css/tailwind.css">
+         <link rel="stylesheet" href="/src/css/globe.css" />
+          
+
+          <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico"> 
+          <link rel="shortcut icon" href="/favicon/favicon.ico" type="image/x-icon"> 
+          <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg"> 
+          <link rel="mask-icon" href="/favicon/favicon.svg" color="#ffbade"> 
+          <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"> 
+          <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+           <link rel="icon" type="image/png" sizes="192x192" href="/favicon/favicon-192x192.png"> 
+           <link rel="icon" type="image/png" sizes="512x512" href="/favicon/favicon-512x512.png"> 
+           <link rel="apple-touch-icon" type="image/png" href="/favicon/apple-touch-icon.png">
+
+           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""> 
+           <link rel="preconnect" href="https://fonts.googleapis.com"> 
+           <link rel="manifest" href="/public/manifest.json"> 
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> 
+            <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script> 
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>  
+
+            <script> 
+            const EARTH_TEXTURE = "https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg"; 
+            const EARTH_BUMP = "https://threejs.org/examples/textures/planets/earth_normal_2048.jpg"; 
+            const EARTH_SPEC = "https://threejs.org/examples/textures/planets/earth_specular_2048.jpg"; 
+            const CLOUD_TEXTURE = "https://clouds.matteason.co.uk/images/8192x4096/clouds.jpg"; 
+            </script> 
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script> 
+            <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"> 
+            <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"></noscript> 
+            <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+ 
+</head>
+<body class="text-gray-100 [scrollbar-width:none] [-ms-overflow-style:none]">
+
+
+    <!--  3D Background Container -->
+    <!-- <div id="threejs-container"> -->
+    <div id="particles-js"></div> 
+    
+    <!-- Animated Cursor -->
+     <div id="cursor" class="fixed w-8 h-8 rounded-full bg-white/10 border border-white/20 pointer-events-none z-50 transform -translate-x-1/2 -translate-y-1/2 mix-blend-difference hidden md:block"></div>
+
+    
+    <!-- Navigation with Mobile Support -->
+       <nav class="fixed top-0 left-0 w-full z-50 backdrop-blur-lg bg-white/10 border-b border-white/20">
+  <div class="max-w-7xl mx-auto px-4 py-4 md:px-6">
+    <div class="flex justify-between items-center">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <span class="text-2xl font-bold gradient-text hover-scale cursor-pointer">JG</span>
+      </div>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#home" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Home</a>
+        <a href="#about" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">About</a>
+        <a href="#skills" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Skills</a>
+        <a href="#projects" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Projects</a>
+        <a href="#playground" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Playground</a>
+        <a href="#contact" class="px-5 py-2  bg-[linear-gradient(90deg,#00F0FF_0%,#5200FF_50%,#FF00F5_100%)] text-white rounded-full font-medium  shadow-[0_0_20px_rgba(34,211,238,0.8)] transition-all duration-300 hover:scale-110">
+           Contact</a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden flex items-center">
+        <button id="menu-toggle" class="text-gray-300 hover:text-white transition-all duration-300" aria-label="Open menu">
+          <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="menu-overlay" id="menu-overlay"></div>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu">
+  <!-- Close Button -->
+  <button id="close-menu">
+    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+
+  <!-- Mobile Links -->
+  <div class="flex flex-col items-center justify-center h-full space-y-6">
+    <a href="#home" class="mobile-nav-item">Home</a>
+    <a href="#about" class="mobile-nav-item">About</a>
+    <a href="#skills" class="mobile-nav-item">Skills</a>
+    <a href="#projects" class="mobile-nav-item">Projects</a>
+    <a href="#playground" class="mobile-nav-item">Playground</a>
+     <a href="#contact" class="px-5 py-2  bg-[linear-gradient(90deg,#00F0FF_0%,#5200FF_50%,#FF00F5_100%)] text-white rounded-full font-medium shadow-[0_0_20px_rgba(34,211,238,0.8)] transition-all duration-300 hover:scale-110">
+           Contact</a>
+  </div>
+</div>
+
+        <!-- Hero Section -->
+   <section id="home" aria-labelledby="hero-heading" class="min-h-screen flex items-center justify-center relative overflow-hidden bg-gray-900 px-4 sm:px-6 pt-24 pb-32 isolate">
+    <!-- Grid background pattern -->
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+    <div class="absolute left-10 top-1/4 w-0.5 h-32 bg-gradient-to-b from-cyan-400 to-transparent"></div>
+    <div class="absolute right-10 bottom-1/3 w-0.5 h-40 bg-gradient-to-t from-purple-500 to-transparent"></div>
+    <div class="absolute left-1/4 top-20 w-16 h-0.5 bg-gradient-to-r from-pink-500 to-transparent"></div>
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+        <!-- Left column - Content -->
+        <div class="text-left space-y-8">
+            <div class="inline-flex items-center gap-10 px-4 py-2 bg-gray-800 rounded-full border border-cyan-400/20 mb-6">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span class="text-sm font-mono text-cyan-400 tracking-widest">AVAILABLE FOR WORK</span>
+            </div>
+            
+            <h1 id="hero-heading" class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
+                <span class="text-white">Hello, I'm</span><br>
+                <span class="text-transparent bg-clip-text bg-[linear-gradient(90deg,#00F0FF_0%,#5200FF_50%,#FF00F5_100%)]">Jeeva G</span>
+            </h1>
+            
+            <p class="text-xl text-gray-200 font-light max-w-lg">
+                Crafting digital experiences at the intersection of design and technology. 
+                Specializing in <span class="text-cyan-400">Flutter development</span> and 
+                <span class="text-purple-400">immersive web design</span>.
+            </p>
+            
+            <!-- Hexagonal button group -->
+            <div class="flex flex-wrap gap-4 mt-10">
+                <a href="#projects" class="hexagon-button bg-cyan-500/10 border-cyan-400 hover:bg-cyan-400/20">
+                    <span class="hexagon-content">
+                        <i class="fas fa-terminal mr-2"></i> View Projects
+                    </span>
+                </a>
+                <a href="#contact" class="hexagon-button bg-purple-500/10 border-purple-400 hover:bg-purple-400/20">
+                    <span class="hexagon-content">
+                        <i class="fas fa-envelope mr-2"></i> Contact
+                    </span>
+                </a>
+            </div>
+            
+            <!-- Tech stack marquee -->
+            <div class="mt-16 overflow-hidden">
+                <div class="flex gap-12 animate-marquee whitespace-nowrap">
+                    <span class="text-gray-400 font-mono">FLUTTER</span>
+                    <span class="text-gray-400 font-mono">Web Dev</span>
+                    <span class="text-gray-400 font-mono">Canva</span>
+                    <span class="text-gray-400 font-mono">FIGMA</span>
+                    <span class="text-gray-400 font-mono">REACT</span>
+                    <span class="text-gray-400 font-mono">UI/UX</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right column - Visual element -->
+        <div class="relative hidden lg:block">
+            <!-- Holographic card effect -->
+            <div class="relative w-full aspect-square max-w-lg mx-auto">
+                <!-- Base card -->
+                <div class="absolute inset-0 bg-gray-800/50 border border-gray-700 rounded-xl shadow-2xl"></div>
+                
+                <!-- Holographic projection -->
+                <div class="absolute inset-4 flex items-center justify-center overflow-hidden rounded-lg">
+                    <div class="relative w-full h-full">
+                        <img src="/src/Assets/pic.JPG" 
+                             alt=" Profile" 
+                             class="absolute inset-0 w-full h-full object-cover rounded-lg grayscale hover:grayscale-0 transition-all duration-500"
+                            fetchpriority="high"
+                             loading="eager">
+                             
+                        <!-- Holographic scan lines -->
+                        <div class="absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,240,255,0.05),rgba(0,240,255,0.05)_1px,transparent_1px,transparent_4px)]"></div>
+                        
+                        <!-- Glow effect -->
+                        <div class="absolute inset-0 rounded-lg shadow-[inset_0_0_40px_rgba(0,240,255,0.3)] pointer-events-none"></div>
+                    </div>
+                </div>
+                
+                <!-- Floating elements -->
+                <div class="absolute -bottom-6 -left-6 w-24 h-24 rounded-lg bg-purple-500/10 border border-purple-400/30 backdrop-blur-sm"></div>
+                <div class="absolute -top-6 -right-6 w-20 h-20 rounded-lg bg-cyan-500/10 border border-cyan-400/30 backdrop-blur-sm"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="absolute bottom-0 left-0 w-full h-56 pointer-events-none z-10">
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent opacity-90"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808005_1px,transparent_1px),linear-gradient(to_bottom,#80808005_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+    </div>
+    
+    <!-- Scroll button positioned above fade -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20">
+        <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})" 
+                class="w-12 h-18 rounded-full border-2 border-cyan-400/60 flex items-center justify-center group bg-gray-900/30 backdrop-blur-md transition-all hover:border-cyan-400/80 hover:bg-gray-900/50"
+                aria-label="Scroll down">
+            <div class="w-1.5 h-8 bg-cyan-400 rounded-full animate-bounce group-hover:animate-none"></div>
+        </button>
+    </div>
+</section>
+
+    <!-- <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20"></div>
+        <div class="max-w-7xl mx-auto px-6 py-20 text-center relative z-10 hero-content">
+            <div class="glass-card rounded-2xl p-10 inline-block">
+                <div class="floating mb-6">
+                    <div class="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white/20 shadow-2xl">
+                       <img src="/Assets/pic.JPG" alt="Profile picture" class="w-full h-full object-cover" loading="eager" decoding="async" width="160" height="160"
+        >
+                    </div>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">
+                    <span class="gradient-text">Jeeva G</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8">Flutter & Web Developer | UI/UX Designer</p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#projects" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:scale-105 flex items-center justify-center">
+                        <i class="fas fa-code mr-2"></i> View Work
+                    </a>
+                    <a href="#contact" class="px-6 py-3 border-2 border-blue-500 text-blue-500 rounded-full font-medium hover:bg-blue-900/20 transition-all duration-300 hover:scale-105 flex items-center justify-center">
+                        <i class="fas fa-paper-plane mr-2"></i> Contact Me
+                    </a>
+                </div>
+            </div>
+
+           <div class="mt-20 scroll-indicator">
+               <a href="#about" class="text-gray-100 hover:text-white transition" aria-label="Scroll to About section">
+               <i class="fas fa-chevron-down text-2xl" aria-hidden="true"></i>
+               </a>
+           </div>
+         </div>
+    </section> -->
+
+    <!-- About Section -->
+    <section id="about" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">About Me</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-4"> Developer | Designer</h3>
+                    <p class="text-gray-300 mb-6">
+                        I'm a passionate BTech Computer Technology student with expertise in Flutter, Web Dev, and UI/UX design. 
+                        My journey in technology began when I wrote my first program, and since then, I've been fascinated by 
+                        how code can create solutions.
+                    </p>
+                    <p class="text-gray-300 mb-6">
+                        With a CGPA of 7.51 and experience in both mobile and web development, I bring creative solutions 
+                        to technical challenges.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-blue-900/20 p-4 rounded-lg text-center border border-blue-500/20">
+                            <i class="fas fa-mobile-alt text-blue-400 text-2xl mb-2"></i>
+                            <p class="font-medium">Mobile Apps</p>
+                        </div>
+                        <div class="bg-purple-900/20 p-4 rounded-lg text-center border border-purple-500/20">
+                            <i class="fas fa-code text-purple-400 text-2xl mb-2"></i>
+                            <p class="font-medium">Web Dev</p>
+                        </div>
+                        <div class="bg-green-900/20 p-4 rounded-lg text-center border border-green-500/20">
+                            <i class="fas fa-paint-brush text-green-400 text-2xl mb-2"></i>
+                            <p class="font-medium">UI/UX</p>
+                        </div>
+                        <div class="bg-yellow-900/20 p-4 rounded-lg text-center border border-yellow-500/20">
+                            <i class="fas fa-brain text-yellow-400 text-2xl mb-2"></i>
+                            <p class="font-medium">AI</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="glass-card p-8 rounded-2xl">
+                        <h3 class="text-2xl font-semibold mb-6">Education</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-xl font-medium">B.Tech Computer Technology</h4>
+                                <p class="text-gray-400">Bannari Amman Institute of Technology | 2021-2024</p>
+                                <p class="text-blue-400">CGPA: 7.51</p>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-medium">Diploma in Computer Science</h4>
+                                <p class="text-gray-400">Coimbatore Institute of Technology | 2018-2021</p>
+                                <p class="text-purple-400">Percentage: 79%</p>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-medium">SSLC</h4>
+                                <p class="text-gray-400">Sowdambikaa Matriculation HSS | 2017-2018</p>
+                                <p class="text-green-400">Percentage: 83.4%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-full shadow-xl">
+                        <i class="fas fa-graduation-cap text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">My Skills</h2>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-laptop-code mr-3 gradient-text"></i>
+                        <span>Technical Skills</span>
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Flutter Development</span>
+                                <span class="text-gray-400">70%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full skill-bar" data-width="70%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">ReactJS</span>
+                                <span class="text-gray-400">50%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-purple-500 h-2 rounded-full skill-bar" data-width="50%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Html/CSS</span>
+                                <span class="text-gray-400">85%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-red-500 h-2 rounded-full skill-bar" data-width="85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">UI/UX Design</span>
+                                <span class="text-gray-400">80%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full skill-bar" data-width="80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">JavaScript</span>
+                                <span class="text-gray-400">70%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full skill-bar" data-width="70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-tools mr-3 gradient-text"></i>
+                        <span>Tools & Technologies</span>
+                    </h3>
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="bg-purple-900/30 text-purple-400 px-4 py-2 rounded-full border border-purple-500/30">Figma</span>
+                        <span class="bg-green-900/30 text-green-400 px-4 py-2 rounded-full border border-green-500/30">Git</span>
+                        <span class="bg-yellow-900/30 text-yellow-400 px-4 py-2 rounded-full border border-yellow-500/30">Firebase</span>
+                        <span class="bg-red-900/30 text-red-400 px-4 py-2 rounded-full border border-red-500/30">Canva</span>
+                        <span class="bg-indigo-900/30 text-indigo-400 px-4 py-2 rounded-full border border-indigo-500/30">AI</span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-user-tie mr-3 gradient-text"></i>
+                        <span>Soft Skills</span>
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-gray-800/30 p-3 rounded-lg flex items-center border border-gray-700">
+                            <i class="fas fa-lightbulb text-blue-400 mr-3"></i>
+                            <span>Creative Thinking</span>
+                        </div>
+                        <div class="bg-gray-800/30 p-3 rounded-lg flex items-center border border-gray-700">
+                            <i class="fas fa-bullseye text-purple-400 mr-3"></i>
+                            <span>Problem Solving</span>
+                        </div>
+                        <div class="bg-gray-800/30 p-3 rounded-lg flex items-center border border-gray-700">
+                            <i class="fas fa-users text-green-400 mr-3"></i>
+                            <span>Teamwork</span>
+                        </div>
+                        <div class="bg-gray-800/30 p-3 rounded-lg flex items-center border border-gray-700">
+                            <i class="fas fa-comments text-yellow-400 mr-3"></i>
+                            <span>Communication</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+   <!-- Projects Section -->
+    <section id="projects" class="py-20 relative">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Featured Projects</h2>
+
+    <!-- Temple Finder -->
+    <div class="glass-card rounded-2xl overflow-hidden mb-16 grid md:grid-cols-2 gap-8">
+      <div class="p-8 flex flex-col justify-center">
+        <div class="flex items-center mb-4">
+          <div class="bg-blue-500/20 p-2 rounded-lg mr-4">
+            <i class="fas fa-place-of-worship text-blue-400 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-2xl font-bold">Temple Finder App</h3>
+        </div>
+        <p class="text-gray-300 mb-6">
+          A Flutter application that provides 360° panoramic views of temples, helping pilgrims virtually 
+          explore sacred sites before visiting.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">Flutter</span>
+          <span class="bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full text-sm">Google Street View</span>
+          <span class="bg-green-900/30 text-green-400 px-3 py-1 rounded-full text-sm">Cross-Platform</span>
+        </div>
+        <div class="flex space-x-4">
+          <a href="https://github.com/jeeva562/Temple_Finder" class="text-blue-400 hover:text-blue-300 transition flex items-center">
+            <i class="fas fa-external-link-alt mr-2" aria-hidden="true"></i> Live Demo
+          </a>
+          <a href="https://github.com/jeeva562/Temple_Finder" class="text-gray-400 hover:text-gray-300 transition flex items-center">
+            <i class="fab fa-github mr-2" aria-hidden="true"></i> View Code
+          </a>
+        </div>
+      </div>
+      <div class="relative min-h-80 bg-gradient-to-br from-blue-900/40 to-purple-900/40 flex items-center justify-center">
+        <div class="relative z-10 p-8">
+          <picture>
+            <source srcset="/src/Assets/temple finder.avif 1x" type="image/avif">
+            <source srcset="/src/Assets/temple finder.webp 1x" type="image/webp">
+            <img src="/src/Assets/temple finder.png" 
+                 alt="Screenshot of Temple Finder App showing panoramic temple view" 
+                 class="rounded-xl shadow-2xl max-h-64 mx-auto"
+                 loading="lazy" decoding="async" width="400" height="256">
+          </picture>
+        </div>
+      </div>
+    </div>
+
+    <!-- NFC App -->
+    <div class="glass-card rounded-2xl overflow-hidden mb-16 grid md:grid-cols-2 gap-8">
+      <div class="p-8 flex flex-col justify-center order-2 md:order-1">
+        <div class="flex items-center mb-4">
+          <div class="bg-purple-500/20 p-2 rounded-lg mr-4">
+            <i class="fas fa-wifi text-purple-400 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-2xl font-bold">NFC Tag Reader/Writer</h3>
+        </div>
+        <p class="text-gray-300 mb-6">
+          A cross-platform mobile application that reads and writes NFC tags, capable of storing various 
+          data types including URLs and UPI payment links.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">Flutter</span>
+          <span class="bg-pink-900/30 text-pink-400 px-3 py-1 rounded-full text-sm">NFC</span>
+          <span class="bg-green-900/30 text-green-400 px-3 py-1 rounded-full text-sm">Mobile</span>
+        </div>
+        <div class="flex space-x-4">
+          <a href="https://github.com/jeeva562/FLUTTER-NFC" class="text-purple-400 hover:text-purple-300 transition flex items-center">
+            <i class="fas fa-external-link-alt mr-2" aria-hidden="true"></i> Live Demo
+          </a>
+          <a href="https://github.com/jeeva562/FLUTTER-NFC" class="text-gray-400 hover:text-gray-300 transition flex items-center">
+            <i class="fab fa-github mr-2" aria-hidden="true"></i> View Code
+          </a>
+        </div>
+      </div>
+      <div class="relative min-h-80 bg-gradient-to-br from-purple-900/40 to-pink-900/40 flex items-center justify-center order-1 md:order-2">
+        <div class="relative z-10 p-8">
+          <picture>
+            <source srcset="/src/Assets/nfctag.avif 1x" type="image/avif">
+            <source srcset="/src/Assets/nfctag.webp 1x" type="image/webp">
+            <img src="/src/Assets/nfctag.png" 
+                 alt="NFC Tag Reader app screenshot" 
+                 class="rounded-xl shadow-2xl max-h-64 mx-auto"
+                 loading="lazy" decoding="async" width="400" height="256">
+          </picture>
+        </div>
+      </div>
+    </div>
+
+    <!-- Movie App -->
+    <div class="glass-card rounded-2xl overflow-hidden grid md:grid-cols-2 gap-8">
+      <div class="p-8 flex flex-col justify-center">
+        <div class="flex items-center mb-4">
+          <div class="bg-red-500/20 p-2 rounded-lg mr-4">
+            <i class="fas fa-film text-red-400 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-2xl font-bold">Movie Discovery App</h3>
+        </div>
+        <p class="text-gray-300 mb-6">
+          A ReactJS application that allows users to browse, search, and discover movies with detailed 
+          information and multimedia content.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">ReactJS</span>
+          <span class="bg-red-900/30 text-red-400 px-3 py-1 rounded-full text-sm">JavaScript</span>
+          <span class="bg-orange-900/30 text-orange-400 px-3 py-1 rounded-full text-sm">TMDB API</span>
+        </div>
+        <div class="flex space-x-4">
+          <a href="https://github.com/jeeva562/movie_app_main" class="text-red-400 hover:text-red-300 transition flex items-center">
+            <i class="fas fa-external-link-alt mr-2" aria-hidden="true"></i> Live Demo
+          </a>
+          <a href="https://github.com/jeeva562/movie_app_main" class="text-gray-400 hover:text-gray-300 transition flex items-center">
+            <i class="fab fa-github mr-2" aria-hidden="true"></i> View Code
+          </a>
+        </div>
+      </div>
+      <div class="relative min-h-80 bg-gradient-to-br from-red-900/40 to-orange-900/40 flex items-center justify-center">
+        <div class="relative z-10 p-8">
+          <picture>
+            <source srcset="/src/Assets/movieapp.avif 1x" type="image/avif">
+            <source srcset="/src/Assets/movieapp.webp 1x" type="image/webp">
+            <img src="/src/Assets/movieapp.png" 
+                 alt="Movie Discovery App interface" 
+                 class="rounded-xl shadow-2xl max-h-64 mx-auto"
+                 loading="lazy" decoding="async" width="400" height="256">
+          </picture>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+
+     <!-- Playground Section --->
+<section id="playground" class="min-h-screen flex flex-col items-center justify-center  text-white px-6 py-16">
+  <!-- Title -->
+  <h2 class="text-4xl md:text-5xl font-extrabold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+    AI Playground 🤖
+  </h2>
+  <p class="text-lg text-gray-300 mb-10 max-w-2xl text-center">
+    Type a prompt and watch the AI bring your imagination to life with glowing, futuristic effects.
+  </p>
+
+  <!-- Input + Button -->
+  <div class="w-full max-w-xl flex flex-col md:flex-row items-center gap-4">
+    <input
+      id="userPrompt"
+      type="text"
+      placeholder="✨ Example: A galaxy of neon jellyfish"
+      class="flex-1 px-4 py-3 rounded-xl bg-gray-800 text-white border border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none transition"
+    />
+    <button
+      id="generateBtn"
+      class="px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:scale-105 transition text-white font-semibold shadow-lg"
+    >
+      Generate
+    </button>
+  </div>
+
+  <!-- Pikachu Loading GIF -->
+  <div class="flex flex-col items-center mt-6">
+    <img id="placeholderGif" src="" alt="Loading..." class="hidden w-24 h-24 object-contain" />
+    <p id="loadingText" class="hidden text-gray-400 mt-3">⚡ Generating...</p>
+  </div>
+
+  <!-- Output Area -->
+  <div id="outputArea" class="mt-10 w-full max-w-2xl text-center"></div>
+</section>
+
+
+<!-- Contact Section -->
+<section id="contact" class="py-20 relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Let's Connect</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      
+      <!-- Contact Form -->
+      <div class="glass-card p-8 rounded-2xl">
+        <h3 class="text-2xl font-semibold mb-6">Tell Me Something</h3>
+        <form id="contact-form" class="space-y-6">
+          <div>
+            <label for="name" class="block text-gray-300 mb-2">Your Name</label>
+            <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
+          </div>
+          <div>
+            <label for="email" class="block text-gray-300 mb-2">Email Address</label>
+            <input type="email" id="email" name="email" required class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
+          </div>
+          <div>
+            <label for="subject" class="block text-gray-300 mb-2">Subject</label>
+            <input type="text" id="subject" name="subject" required class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
+          </div>
+          <div>
+            <label for="message" class="block text-gray-300 mb-2">Message</label>
+            <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white resize-none"></textarea>
+          </div>
+          <div>
+            <button type="submit" id="submit-btn" class="w-full bg-[linear-gradient(90deg,#00F0FF_0%,#5200FF_50%,#FF00F5_100%)] text-white py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105">
+              Send Message <i class="fas fa-paper-plane ml-2"></i>
+            </button>
+            <div id="form-notification" class="mt-3 text-center hidden"></div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="space-y-6">
+        <div class="glass-card p-8 rounded-2xl">
+          <h3 class="text-2xl font-semibold mb-6">Contact Information</h3>
+          <div class="space-y-6">
+            <div class="flex items-start">
+              <div class="bg-blue-500/20 p-3 rounded-full mr-4 flex-shrink-0">
+                <i class="fas fa-map-marker-alt text-blue-400"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-lg">Address</h4>
+                <p class="text-gray-400">Thalaimalaipatti, Trichy-621215</p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="bg-purple-500/20 p-3 rounded-full mr-4 flex-shrink-0">
+                <i class="fas fa-envelope text-purple-400"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-lg">Email</h4>
+               <!-- <p class="text-gray-400">priyadharshiniselvam242006@gmail.com</p> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl">
+          <h3 class="text-xl font-semibold mb-4">Connect With Links</h3>
+          <div class="flex flex-wrap gap-4 justify-center sm:justify-start">
+            <a href="https://www.linkedin.com/in/jeeva-g/" class="w-12 h-12 bg-gray-800/50 rounded-full flex items-center justify-center hover:bg-blue-600/30 hover:text-white transition border border-gray-700" aria-label="LinkedIn — Jeeva G">
+              <i class="fab fa-linkedin-in text-lg" aria-hidden="true"></i>
+            </a>
+            <a href="https://www.github.com/jeeva562/" class="w-12 h-12 bg-gray-800/50 rounded-full flex items-center justify-center hover:bg-gray-600/30 hover:text-white transition border border-gray-700" aria-label="GitHub — Jeeva G">
+              <i class="fab fa-github text-lg" aria-hidden="true"></i>
+            </a>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=jeevaranjith101124@gmail.com" class="w-12 h-12 bg-gray-800/50 rounded-full flex items-center justify-center hover:bg-blue-400/30 hover:text-white transition border border-gray-700" aria-label="Send email to Jeeva G">
+              <i class="fas fa-envelope text-lg" aria-hidden="true"></i>
+            </a>
+            <a href="https://www.instagram.com/jeevaranjith_4/" class="w-12 h-12 bg-gray-800/50 rounded-full flex items-center justify-center hover:bg-pink-600/30 hover:text-white transition border border-gray-700" aria-label="Instagram — Jeeva G">
+              <i class="fab fa-instagram text-lg" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl">
+          <h3 class="text-xl font-semibold mb-4">Hobbies & Interests</h3>
+          <div class="flex flex-wrap gap-3">
+            <span class="bg-blue-900/30 text-blue-400 px-4 py-2 rounded-full flex items-center border border-blue-500/30 text-sm">
+              <i class="fas fa-leaf mr-2"></i> Gardening
+            </span>
+            <span class="bg-purple-900/30 text-purple-400 px-4 py-2 rounded-full flex items-center border border-purple-500/30 text-sm">
+              <i class="fas fa-film mr-2"></i> Anime
+            </span>
+            <span class="bg-green-900/30 text-green-400 px-4 py-2 rounded-full flex items-center border border-green-500/30 text-sm">
+              <i class="fas fa-code mr-2"></i> Coding
+            </span>
+            <span class="bg-yellow-900/30 text-yellow-400 px-4 py-2 rounded-full flex items-center border border-yellow-500/30 text-sm">
+              <i class="fas fa-paint-brush mr-2"></i> Design
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+        
+  <!-- ===== GLOBE SECTION ===== -->
+        <div class="container">
+        
+       <div class="globe-container">
+            <div class="loading-overlay" id="loading">
+                <div class="spinner"></div>
+                <div class="loading-text">Loading Earth textures...</div>
+            </div>
+            
+            <div class="accessibility-options">
+                <button class="a11y-btn" id="reduce-motion" aria-label="run">
+                    <i class="fas fa-running" aria-hidden="true"></i> Reduce Motion
+                </button>
+                <button class="a11y-btn" id="toggle-rotation" aria-label="pause">
+                    <i class="fas fa-pause" aria-hidden="true"></i> Pause Rotation
+                </button>
+            </div>
+            
+            <!-- Mobile touch controls -->
+            <div class="mobile-controls">
+                <button class="mobile-control-btn" id="zoom-in" aria-label="plus">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                </button>
+                <button class="mobile-control-btn" id="zoom-out"aria-label="minus" >
+                    <i class="fas fa-minus" aria-hidden="true"></i>
+                </button>
+            </div>
+            
+            <canvas id="earth-globe"></canvas>  
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-gray-900/80 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0 text-center md:text-left">
+                    <h2 class="text-2xl font-bold gradient-text hover-scale inline-block cursor-pointer">Jeeva G</h2>
+                    <p class="text-gray-400 mt-2"> Developer & Designer</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="https://www.github.com/jeeva562/" class="text-gray-400 hover:text-white transition transform hover:scale-125" aria-label="GitHub — Jeeva G">
+                        <i class="fab fa-github text-xl" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/jeeva-g/" class="text-gray-400 hover:text-white transition transform hover:scale-125"aria-label="LinkedIn — Jeeva G">
+                        <i class="fab fa-linkedin-in text-xl" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=jeevaranjith101124@gmail.com" class="text-gray-400 hover:text-white transition transform hover:scale-125"  aria-label="Send email to Jeeva G">
+                        <i class="fas fa-envelope text-xl" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://www.instagram.com/jeevaranjith_4/" class="text-gray-400 hover:text-white transition transform hover:scale-125" aria-label="Instagram — Jeeva G">
+                        <i class="fab fa-instagram text-xl" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Jeeva G. All rights reserved.</p>
+                <p class="mt-2">Made with <i class="fas fa-heart text-red-500"></i></p>
+            </div>
+        </div>
+    </footer>
+    <script src="/src/js/globe.js"></script>
+   <script type="module" src="/src/js/app.js"></script>
+   <script id="dhws-dataInjector" src="/src/js/dhws-data-injector.js"></script>
+</body>
+    </html>   
+       
