@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const earthBump = textureLoader.load(EARTH_BUMP);
                 const earthSpec = textureLoader.load(EARTH_SPEC);
-                const cloudTexture = textureLoader.load(CLOUD_TEXTURE);
+                // const cloudTexture = textureLoader.load(CLOUD_TEXTURE);
                 
                 // Earth material
                 const earthMaterial = new THREE.MeshPhongMaterial({
@@ -96,15 +96,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 earthGroup.add(earth);
                 
                 // Clouds
-                const cloudGeometry = new THREE.SphereGeometry(1.005, segments, segments);
-                const cloudMaterial = new THREE.MeshPhongMaterial({
-                    map: cloudTexture,
-                    transparent: true,
-                    opacity: 0.8
-                });
+                // const cloudGeometry = new THREE.SphereGeometry(1.005, segments, segments);
+                // const cloudMaterial = new THREE.MeshPhongMaterial({
+                //     map: cloudTexture,
+                //     transparent: true,
+                //     opacity: 0.8
+                // });
                 
-                const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
-                earthGroup.add(clouds);
+                // const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+                // earthGroup.add(clouds);
                 
                 // Stars - fewer on mobile
                 const starCount = config.isMobile ? 2000 : 5000;
@@ -130,11 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const stars = new THREE.Points(starGeometry, starMaterial);
                 scene.add(stars);
                 
-                return { earth, clouds };
+                return { earth }; //add cloud
             };
             
             // Initialize earth
-            const { earth, clouds } = createEarth();
+            const { earth} = createEarth(); //add cloud
             
             // Controls
             const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -256,9 +256,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 // Cloud rotation
-                if (clouds) {
-                    clouds.rotation.y += 0.0005;
-                }
+                // if (clouds) {
+                //     clouds.rotation.y += 0.0005;
+                // }as
                 
                 controls.update();
                 renderer.render(scene, camera);

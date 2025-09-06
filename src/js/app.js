@@ -497,70 +497,75 @@
         // }
 
         
-        // --- API Logic ---
-const input = document.getElementById("userPrompt");
-const button = document.getElementById("generateBtn");
-const gif = document.getElementById("placeholderGif");
-const loadingText = document.getElementById("loadingText");
-const outputArea = document.getElementById("outputArea");
+// app.js
+document.addEventListener("DOMContentLoaded", () => {
+  const promptInput = document.getElementById("userPrompt");
+  const typeSelect = document.getElementById("outputType");
+  const generateBtn = document.getElementById("generateBtn");
+  const outputArea = document.getElementById("outputArea");
+  const loadingGif = document.getElementById("placeholderGif");
+  const loadingText = document.getElementById("loadingText");
 
-// Use your Render-hosted backe
+  const BACKEND_URL = "https://portfolios-backend.onrender.com".replace(/\/$/, "");
 
-function resetUI() {
-  gif.classList.add("hidden");
-  loadingText.classList.add("hidden");
-}
+  generateBtn?.addEventListener("click", async () => {
+    const prompt = promptInput?.value?.trim();
+    const type = typeSelect?.value;
 
-button.addEventListener("click", async () => {
-  const prompt = input.value.trim();
-  if (!prompt) return;
-
-  // Reset output
-  outputArea.innerHTML = "";
-
-  // Show Pikachu + loading
-  gif.src = "/public/pikachu.gif"; 
-  gif.classList.remove("hidden");
-  loadingText.textContent = "⚡ Generating...";
-  loadingText.classList.remove("hidden");
-
-  try {
-    const response = await fetch(`${API_BASE}/api/generate-effect`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt, type: "image" }),
-    });
-
-    if (!response.ok) throw new Error(`Server error: ${response.status}`);
-
-    const data = await response.json();
-
-    resetUI();
-
-    if (data.type === "text" && data.result) {
-      const p = document.createElement("p");
-      p.textContent = data.result;
-      p.className = "text-lg text-green-400 mt-4";
-      outputArea.appendChild(p);
-    } else if (data.type === "image" && data.image) {
-      const img = document.createElement("img");
-      img.src = data.image;
-      img.alt = "AI Generated Visual";
-      img.className = "max-h-[300px] rounded-lg shadow-lg mt-4";
-      outputArea.appendChild(img);
-    } else {
-      throw new Error("Invalid AI response");
+    if (!prompt || !type) {
+      alert("Please enter a prompt and select an output type.");
+      return;
     }
-  } catch (err) {
-    console.error("❌ Generation failed:", err);
-    resetUI();
 
-    const p = document.createElement("p");
-    p.textContent = "⚠️ Failed to generate. Try again.";
-    p.className = "text-red-400 mt-4";
-    outputArea.appendChild(p);
-  }
+    loadingGif?.classList.remove("hidden");
+    loadingText?.classList.remove("hidden");
+    outputArea.innerHTML = "";
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/generate-effect`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, type })
+      });
+
+      const contentType = res.headers.get("Content-Type") || "";
+
+      if (!res.ok) {
+        let errMsg = `Server ${res.status}`;
+        if (contentType.includes("application/json")) {
+          const errData = await res.json();
+          errMsg = errData.error || errMsg;
+        } else {
+          errMsg = await res.text();
+        }
+        throw new Error(errMsg);
+      }
+
+      const data = await res.json();
+      if (data.type === "image" && data.image) {
+        outputArea.innerHTML = `<img src="${data.image}" alt="Generated Image" class="max-w-full rounded-lg shadow-lg" />`;
+      } else if (data.type === "text" && data.result) {
+        outputArea.textContent = data.result;
+      } else {
+        outputArea.textContent = "⚠️ Unexpected response format from backend.";
+      }
+    } catch (err) {
+      console.error("❌ Generation failed:", err);
+      let msg = err.message || "Unknown error";
+      if (msg.toLowerCase().includes("image models")) {
+        msg = "⚠️ Image generation failed or timed out. Try again later.";
+      } else if (msg.toLowerCase().includes("text models")) {
+        msg = "⚠️ Text generation failed or timed out. Try again later.";
+      }
+      outputArea.textContent = msg;
+    } finally {
+      loadingGif?.classList.add("hidden");
+      loadingText?.classList.add("hidden");
+    }
+  });
 });
+
+
 
         // FIXED: Contact Form with Proper Error Handling
     const contactForm = document.getElementById('contact-form');
@@ -648,201 +653,121 @@ button.addEventListener("click", async () => {
   
 // RIGHT-CLICK PROTECTION & SECURITY
 // Disable right-click context menu
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
+// document.addEventListener('contextmenu', function(e) {
+//     e.preventDefault();
     
-    // Optional: Show custom message
-    showProtectionMessage('Right-click is disabled');
+  
+//     return false;
+// });
+
+
+// document.addEventListener('keydown', function(e) {
     
-    return false;
-});
-
-// Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-document.addEventListener('keydown', function(e) {
-    // F12 (Developer Tools)
-    if (e.keyCode === 123) {
-        e.preventDefault();
-        showProtectionMessage('Developer tools are disabled');
-        return false;
-    }
+//     if (e.keyCode === 123) {
+//         e.preventDefault();
+       
+//         return false;
+//     }
     
-    // Ctrl+Shift+I (Developer Tools)
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-        e.preventDefault();
-        showProtectionMessage('Developer tools are disabled');
-        return false;
-    }
+
+//     if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+//         e.preventDefault();
+        
+//         return false;
+//     }
+ 
+//     if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+//         e.preventDefault();
+
+//         return false;
+//     }
     
-    // Ctrl+Shift+J (Console)
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-        e.preventDefault();
-        showProtectionMessage('Console access is disabled');
-        return false;
-    }
+//     if (e.ctrlKey && e.keyCode === 85) {
+//         e.preventDefault();
+       
+//         return false;
+//     }
     
-    // Ctrl+U (View Source)
-    if (e.ctrlKey && e.keyCode === 85) {
-        e.preventDefault();
-        showProtectionMessage('View source is disabled');
-        return false;
-    }
     
-    // Ctrl+Shift+C (Element Inspector)
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
-        e.preventDefault();
-        showProtectionMessage('Element inspector is disabled');
-        return false;
-    }
+//     if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+//         e.preventDefault();
+     
+//         return false;
+//     }
     
-    // Ctrl+S (Save Page)
-    if (e.ctrlKey && e.keyCode === 83) {
-        e.preventDefault();
-        showProtectionMessage('Saving page is disabled');
-        return false;
-    }
-});
-
-// Disable text selection (optional)
-document.addEventListener('selectstart', function(e) {
-    e.preventDefault();
-    return false;
-});
-
-// Disable drag and drop
-document.addEventListener('dragstart', function(e) {
-    e.preventDefault();
-    return false;
-});
-
-// Custom protection message display
-function showProtectionMessage(message) {
-    // Remove existing message if any
-    const existingMessage = document.getElementById('protection-message');
-    if (existingMessage) {
-        existingMessage.remove();
-    }
     
-    // Create and show new message
-    const messageDiv = document.createElement('div');
-    messageDiv.id = 'protection-message';
-    messageDiv.innerHTML = `
-        <div style="
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-            z-index: 10000;
-            animation: slideIn 0.3s ease-out;
-        ">
-            <i class="fas fa-shield-alt mr-2"></i>
-            ${message}
-        </div>
-    `;
+//     if (e.ctrlKey && e.keyCode === 83) {
+//         e.preventDefault();
+ 
+//         return false;
+//     }
+// });
+
+
+// document.addEventListener('selectstart', function(e) {
+//     e.preventDefault();
+//     return false;
+// });
+
+
+// document.addEventListener('dragstart', function(e) {
+//     e.preventDefault();
+//     return false;
+// });
+
+
+
+// let devtools = {
+//     open: false,
+//     orientation: null
+// };
+
+
+// setInterval(function() {
+//     if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+//         if (!devtools.open) {
+//             devtools.open = true;
+            
+//             showProtectionMessage('');
+            
+//         }
+//     } else {
+//         devtools.open = false;
+//     }
+// }, 500);
+
+
+
+
+// window.addEventListener('beforeprint', function(e) {
+//     e.preventDefault();
+//     showProtectionMessage('');
+//     return false;
+// });
+
+
+// document.addEventListener('keydown', function(e) {
+//     if ((e.ctrlKey || e.metaKey) && e.keyCode === 83) {
+//         e.preventDefault();
     
-    document.body.appendChild(messageDiv);
-    
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-        if (messageDiv && messageDiv.parentNode) {
-            messageDiv.remove();
-        }
-    }, 3000);
-}
+//         return false;
+//     }
+// });
 
-// Add CSS for the slide-in animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    /* Disable text selection globally */
-    * {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-    
-    /* Allow selection for input fields */
-    input, textarea {
-        -webkit-user-select: text !important;
-        -moz-user-select: text !important;
-        -ms-user-select: text !important;
-        user-select: text !important;
-    }
-`;
-document.head.appendChild(style);
+// document.addEventListener('touchstart', function(e) {
+//     if (e.touches.length > 1) {
+//         e.preventDefault(); 
+//     }
+// });
 
-// Advanced protection: Detect developer tools opening
-let devtools = {
-    open: false,
-    orientation: null
-};
 
-// Check if developer tools are open
-setInterval(function() {
-    if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-        if (!devtools.open) {
-            devtools.open = true;
-            // Optional: Redirect or show warning
-            showProtectionMessage('Developer tools detected!');
-            // Uncomment to redirect: window.location.href = "about:blank";
-        }
-    } else {
-        devtools.open = false;
-    }
-}, 500);
+// document.addEventListener('DOMContentLoaded', function() {
+//     const images = document.querySelectorAll('img');
+//     images.forEach(img => {
+//         img.addEventListener('dragstart', function(e) {
+//             e.preventDefault();
+//         });
+//     });
+// });
 
-// Console warning message
-console.log('%cSTOP!', 'color: red; font-size: 50px; font-weight: bold;');
-console.log('%cThis is a browser feature intended for developers. Content on this page is protected.', 'color: red; font-size: 16px;');
-
-// Disable print
-window.addEventListener('beforeprint', function(e) {
-    e.preventDefault();
-    showProtectionMessage('Printing is disabled');
-    return false;
-});
-
-// Disable save shortcut
-document.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey || e.metaKey) && e.keyCode === 83) {
-        e.preventDefault();
-        showProtectionMessage('Saving is disabled');
-        return false;
-    }
-});
-
-// Protection for mobile devices
-document.addEventListener('touchstart', function(e) {
-    if (e.touches.length > 1) {
-        e.preventDefault(); // Disable multi-touch gestures
-    }
-});
-
-// Disable image dragging
-document.addEventListener('DOMContentLoaded', function() {
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
-        img.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-        });
-    });
-});
-
-console.log('🔒 Right-click protection and security measures activated');
+// console.log('🔒 Right-click protection and security measures activated');
