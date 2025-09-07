@@ -10,7 +10,7 @@
        <link rel="stylesheet" href="./src/css/style.css">
         <link rel="stylesheet" href="./src/css/tailwind.css">
          <link rel="stylesheet" href="./src/css/globe.css" />
-          
+         
 
           <link rel="icon" type="image/x-icon" href="./favicon/favicon.ico"> 
           <link rel="shortcut icon" href="./favicon/favicon.ico" type="image/x-icon"> 
@@ -445,9 +445,9 @@
       <div class="relative min-h-80 bg-gradient-to-br from-blue-900/40 to-purple-900/40 flex items-center justify-center">
         <div class="relative z-10 p-8">
           <picture>
-            <source srcset="/src/Assets/temple finder.avif 1x" type="image/avif">
-            <source srcset="/src/Assets/temple finder.webp 1x" type="image/webp">
-            <img src="/src/Assets/temple finder.png" 
+            <source srcset="./src/Assets/temple finder.avif 1x" type="image/avif">
+            <source srcset="./src/Assets/temple finder.webp 1x" type="image/webp">
+            <img src="./src/Assets/temple finder.png" 
                  alt="Screenshot of Temple Finder App showing panoramic temple view" 
                  class="rounded-xl shadow-2xl max-h-64 mx-auto"
                  loading="lazy" decoding="async" width="400" height="256">
@@ -486,9 +486,9 @@
       <div class="relative min-h-80 bg-gradient-to-br from-purple-900/40 to-pink-900/40 flex items-center justify-center order-1 md:order-2">
         <div class="relative z-10 p-8">
           <picture>
-            <source srcset="/src/Assets/nfctag.avif 1x" type="image/avif">
-            <source srcset="/src/Assets/nfctag.webp 1x" type="image/webp">
-            <img src="/src/Assets/nfctag.png" 
+            <source srcset="./src/Assets/nfctag.avif 1x" type="image/avif">
+            <source srcset="./src/Assets/nfctag.webp 1x" type="image/webp">
+            <img src="./src/Assets/nfctag.png" 
                  alt="NFC Tag Reader app screenshot" 
                  class="rounded-xl shadow-2xl max-h-64 mx-auto"
                  loading="lazy" decoding="async" width="400" height="256">
@@ -527,9 +527,9 @@
       <div class="relative min-h-80 bg-gradient-to-br from-red-900/40 to-orange-900/40 flex items-center justify-center">
         <div class="relative z-10 p-8">
           <picture>
-            <source srcset="/src/Assets/movieapp.avif 1x" type="image/avif">
-            <source srcset="/src/Assets/movieapp.webp 1x" type="image/webp">
-            <img src="/src/Assets/movieapp.png" 
+            <source srcset="./src/Assets/movieapp.avif 1x" type="image/avif">
+            <source srcset="./src/Assets/movieapp.webp 1x" type="image/webp">
+            <img src="./src/Assets/movieapp.png" 
                  alt="Movie Discovery App interface" 
                  class="rounded-xl shadow-2xl max-h-64 mx-auto"
                  loading="lazy" decoding="async" width="400" height="256">
@@ -539,51 +539,6 @@
     </div>
 
   </div>
-</section>
-
-
-<section id="playground" class="min-h-screen flex flex-col items-center justify-center text-white px-6 py-16">
-  <!-- Title -->
-  <h2 class="text-4xl md:text-5xl font-extrabold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
-    AI Playground 🤖
-  </h2>
-  <p class="text-lg text-gray-300 mb-10 max-w-2xl text-center">
-    Type a prompt and watch the AI bring your imagination to life with glowing, futuristic effects.
-  </p>
-
-  <!-- Input + Options + Button -->
-  <div class="w-full max-w-xl flex flex-col md:flex-row items-center gap-4">
-    
-    <input
-      id="userPrompt"
-      type="text"
-      placeholder="✨ Example: A galaxy of neon jellyfish"
-      class="flex-1 px-4 py-3 rounded-xl bg-gray-800 text-white border border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none transition hover:border-purple-400"
-    />
-    <select
-      id="outputType"
-      class="px-3 py-3 rounded-xl bg-gray-800 text-white border border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none transition hover:border-purple-400"
-    >
-      <option value="image">🖼 Image</option>
-      <option value="text">📝 Text</option>
-    </select>
-    <button
-      id="generateBtn"
-      aria-label="Generate AI output"
-      class="px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:scale-105 active:scale-95 transition text-white font-semibold shadow-lg w-full md:w-auto"
-    >
-      Generate
-    </button>
-  </div>
-
-  <!-- Pikachu Loading GIF -->
-  <div class="flex flex-col items-center mt-6">
-    <img id="placeholderGif" src="/public/images/pikachu.gif" alt="Loading animation" class="hidden w-24 h-24 object-contain" />
-    <p id="loadingText" class="hidden text-gray-400 mt-3">⚡ Generating...</p>
-  </div>
-
-  <!-- Output Area -->
-  <div id="outputArea" class="mt-10 w-full max-w-2xl text-center"></div>
 </section>
 
 
@@ -773,6 +728,7 @@
     <script   type="module" src="./src/js/globe.js"></script>
    <script type="module" src="./src/js/app.js"></script>
    <script  type="module"  src="./src/js/dhws-data-injector.js"></script>
-  </body>
+  
+</body>
     </html>   
        

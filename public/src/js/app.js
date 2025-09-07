@@ -496,75 +496,6 @@
         //     });
         // }
 
-        
-// app.js
-document.addEventListener("DOMContentLoaded", () => {
-  const promptInput = document.getElementById("userPrompt");
-  const typeSelect = document.getElementById("outputType");
-  const generateBtn = document.getElementById("generateBtn");
-  const outputArea = document.getElementById("outputArea");
-  const loadingGif = document.getElementById("placeholderGif");
-  const loadingText = document.getElementById("loadingText");
-
-  const BACKEND_URL = "https://portfolios-backend.onrender.com".replace(/\/$/, "");
-
-  generateBtn?.addEventListener("click", async () => {
-    const prompt = promptInput?.value?.trim();
-    const type = typeSelect?.value;
-
-    if (!prompt || !type) {
-      alert("Please enter a prompt and select an output type.");
-      return;
-    }
-
-    loadingGif?.classList.remove("hidden");
-    loadingText?.classList.remove("hidden");
-    outputArea.innerHTML = "";
-
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/generate-effect`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, type })
-      });
-
-      const contentType = res.headers.get("Content-Type") || "";
-
-      if (!res.ok) {
-        let errMsg = `Server ${res.status}`;
-        if (contentType.includes("application/json")) {
-          const errData = await res.json();
-          errMsg = errData.error || errMsg;
-        } else {
-          errMsg = await res.text();
-        }
-        throw new Error(errMsg);
-      }
-
-      const data = await res.json();
-      if (data.type === "image" && data.image) {
-        outputArea.innerHTML = `<img src="${data.image}" alt="Generated Image" class="max-w-full rounded-lg shadow-lg" />`;
-      } else if (data.type === "text" && data.result) {
-        outputArea.textContent = data.result;
-      } else {
-        outputArea.textContent = "⚠️ Unexpected response format from backend.";
-      }
-    } catch (err) {
-      console.error("❌ Generation failed:", err);
-      let msg = err.message || "Unknown error";
-      if (msg.toLowerCase().includes("image models")) {
-        msg = "⚠️ Image generation failed or timed out. Try again later.";
-      } else if (msg.toLowerCase().includes("text models")) {
-        msg = "⚠️ Text generation failed or timed out. Try again later.";
-      }
-      outputArea.textContent = msg;
-    } finally {
-      loadingGif?.classList.add("hidden");
-      loadingText?.classList.add("hidden");
-    }
-  });
-});
-
 
 
         // FIXED: Contact Form with Proper Error Handling
@@ -653,121 +584,120 @@ document.addEventListener("DOMContentLoaded", () => {
   
 // RIGHT-CLICK PROTECTION & SECURITY
 // Disable right-click context menu
-// document.addEventListener('contextmenu', function(e) {
-//     e.preventDefault();
+ document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
     
   
-//     return false;
-// });
+    return false;
+ });
 
 
-// document.addEventListener('keydown', function(e) {
+ document.addEventListener('keydown', function(e) {
     
-//     if (e.keyCode === 123) {
-//         e.preventDefault();
+     if (e.keyCode === 123) {
+         e.preventDefault();
        
-//         return false;
-//     }
+         return false;
+    }
     
 
-//     if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-//         e.preventDefault();
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+        e.preventDefault();
         
-//         return false;
-//     }
+        return false;
+    }
  
-//     if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-//         e.preventDefault();
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+         e.preventDefault();
 
-//         return false;
-//     }
+        return false;
+    }
     
-//     if (e.ctrlKey && e.keyCode === 85) {
-//         e.preventDefault();
+     if (e.ctrlKey && e.keyCode === 85) {
+         e.preventDefault();
        
-//         return false;
-//     }
+         return false;
+    }
     
     
-//     if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
-//         e.preventDefault();
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+         e.preventDefault();
      
-//         return false;
-//     }
+         return false;
+     }
     
     
-//     if (e.ctrlKey && e.keyCode === 83) {
-//         e.preventDefault();
+     if (e.ctrlKey && e.keyCode === 83) {
+         e.preventDefault();
  
-//         return false;
-//     }
-// });
+         return false;     }
+});
 
 
-// document.addEventListener('selectstart', function(e) {
-//     e.preventDefault();
-//     return false;
-// });
+ document.addEventListener('selectstart', function(e) {
+     e.preventDefault();
+     return false;
+ });
 
 
-// document.addEventListener('dragstart', function(e) {
-//     e.preventDefault();
-//     return false;
-// });
+ document.addEventListener('dragstart', function(e) {
+     e.preventDefault();
+    return false;
+ });
 
 
 
-// let devtools = {
-//     open: false,
-//     orientation: null
-// };
+let devtools = {
+     open: false,
+     orientation: null
+ };
 
 
-// setInterval(function() {
-//     if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-//         if (!devtools.open) {
-//             devtools.open = true;
+ setInterval(function() {
+     if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+         if (!devtools.open) {
+             devtools.open = true;
             
-//             showProtectionMessage('');
+            showProtectionMessage('');
             
-//         }
-//     } else {
-//         devtools.open = false;
-//     }
-// }, 500);
+        }
+    } else {
+        devtools.open = false;
+     }
+ }, 500);
 
 
 
 
-// window.addEventListener('beforeprint', function(e) {
-//     e.preventDefault();
-//     showProtectionMessage('');
-//     return false;
-// });
+ window.addEventListener('beforeprint', function(e) {
+     e.preventDefault();
+     showProtectionMessage('');
+    return false;
+});
 
 
-// document.addEventListener('keydown', function(e) {
-//     if ((e.ctrlKey || e.metaKey) && e.keyCode === 83) {
-//         e.preventDefault();
+ document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.keyCode === 83) {
+        e.preventDefault();
     
-//         return false;
-//     }
-// });
+        return false;
+     }
+ });
 
-// document.addEventListener('touchstart', function(e) {
-//     if (e.touches.length > 1) {
-//         e.preventDefault(); 
-//     }
-// });
+ document.addEventListener('touchstart', function(e) {
+     if (e.touches.length > 1) {
+         e.preventDefault(); 
+    }
+ });
 
 
-// document.addEventListener('DOMContentLoaded', function() {
-//     const images = document.querySelectorAll('img');
-//     images.forEach(img => {
-//         img.addEventListener('dragstart', function(e) {
-//             e.preventDefault();
-//         });
-//     });
-// });
+ document.addEventListener('DOMContentLoaded', function() {
+     const images = document.querySelectorAll('img');
+     images.forEach(img => {
+        img.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+     });
+ });
 
-// console.log('🔒 Right-click protection and security measures activated');
+ console.log('🔒 Right-click protection and security measures activated');
