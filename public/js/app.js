@@ -584,120 +584,120 @@
   
 // RIGHT-CLICK PROTECTION & SECURITY
 // Disable right-click context menu
- document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
+//  document.addEventListener('contextmenu', function(e) {
+//     e.preventDefault();
     
   
-    return false;
- });
+//     return false;
+//  });
 
 
- document.addEventListener('keydown', function(e) {
+//  document.addEventListener('keydown', function(e) {
     
-     if (e.keyCode === 123) {
-         e.preventDefault();
+//      if (e.keyCode === 123) {
+//          e.preventDefault();
        
-         return false;
-    }
+//          return false;
+//     }
     
 
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-        e.preventDefault();
+//     if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+//         e.preventDefault();
         
-        return false;
-    }
+//         return false;
+//     }
  
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-         e.preventDefault();
+//     if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+//          e.preventDefault();
 
-        return false;
-    }
+//         return false;
+//     }
     
-     if (e.ctrlKey && e.keyCode === 85) {
-         e.preventDefault();
+//      if (e.ctrlKey && e.keyCode === 85) {
+//          e.preventDefault();
        
-         return false;
-    }
+//          return false;
+//     }
     
     
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
-         e.preventDefault();
+//     if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+//          e.preventDefault();
      
-         return false;
-     }
+//          return false;
+//      }
     
     
-     if (e.ctrlKey && e.keyCode === 83) {
-         e.preventDefault();
+//      if (e.ctrlKey && e.keyCode === 83) {
+//          e.preventDefault();
  
-         return false;     }
-});
+//          return false;     }
+// });
 
 
- document.addEventListener('selectstart', function(e) {
-     e.preventDefault();
-     return false;
- });
+//  document.addEventListener('selectstart', function(e) {
+//      e.preventDefault();
+//      return false;
+//  });
 
 
- document.addEventListener('dragstart', function(e) {
-     e.preventDefault();
-    return false;
- });
+//  document.addEventListener('dragstart', function(e) {
+//      e.preventDefault();
+//     return false;
+//  });
 
 
 
-let devtools = {
-     open: false,
-     orientation: null
- };
+// let devtools = {
+//      open: false,
+//      orientation: null
+//  };
 
 
- setInterval(function() {
-     if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-         if (!devtools.open) {
-             devtools.open = true;
+//  setInterval(function() {
+//      if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+//          if (!devtools.open) {
+//              devtools.open = true;
             
-            showProtectionMessage('');
+//             showProtectionMessage('');
             
-        }
-    } else {
-        devtools.open = false;
-     }
- }, 500);
+//         }
+//     } else {
+//         devtools.open = false;
+//      }
+//  }, 500);
 
 
 
 
- window.addEventListener('beforeprint', function(e) {
-     e.preventDefault();
-     showProtectionMessage('');
-    return false;
-});
+//  window.addEventListener('beforeprint', function(e) {
+//      e.preventDefault();
+//      showProtectionMessage('');
+//     return false;
+// });
 
 
- document.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey || e.metaKey) && e.keyCode === 83) {
-        e.preventDefault();
+//  document.addEventListener('keydown', function(e) {
+//     if ((e.ctrlKey || e.metaKey) && e.keyCode === 83) {
+//         e.preventDefault();
     
-        return false;
-     }
- });
+//         return false;
+//      }
+//  });
 
- document.addEventListener('touchstart', function(e) {
-     if (e.touches.length > 1) {
-         e.preventDefault(); 
-    }
- });
+//  document.addEventListener('touchstart', function(e) {
+//      if (e.touches.length > 1) {
+//          e.preventDefault(); 
+//     }
+//  });
 
 
- document.addEventListener('DOMContentLoaded', function() {
-     const images = document.querySelectorAll('img');
-     images.forEach(img => {
-        img.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-        });
-     });
- });
+//  document.addEventListener('DOMContentLoaded', function() {
+//      const images = document.querySelectorAll('img');
+//      images.forEach(img => {
+//         img.addEventListener('dragstart', function(e) {
+//             e.preventDefault();
+//         });
+//      });
+//  });
 
- console.log('🔒 Right-click protection and security measures activated');
+//  console.log('🔒 Right-click protection and security measures activated');
