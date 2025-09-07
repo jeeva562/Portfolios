@@ -4,8 +4,8 @@
   "description": "A modern, interactive portfolio featuring 3D animations, glassmorphism UI, and mini-games. Built to showcase my skills, projects, and creativity in web development.",
   "private": true,
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "npm run dev",
+    "dev": "npm run watch:css ",
     "build:css": "npx @dhiwise/component-tagger && npx tailwindcss -i ./public/tailwind.css -o ./public/css/style.css --minify",
     "watch:css": "npx @dhiwise/component-tagger && npx tailwindcss -i ./public/tailwind.css -o ./public/css/style.css --watch",
     "serve": "live-server public"
